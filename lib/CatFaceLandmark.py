@@ -7,7 +7,7 @@ class CatFaceLandmark:
     RIGHT_OF_LEFT_EAR = 5
     LEFT_OF_RIGHT_EAR = 6
     TIP_OF_RIGHT_EAR = 7
-    RIGHT_OF_RIGTH_EAR = 8
+    RIGHT_OF_RIGHT_EAR = 8
 
     def __init__(self):
         pass

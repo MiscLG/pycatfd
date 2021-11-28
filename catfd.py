@@ -122,8 +122,8 @@ def detect(input_image, output_path, use_json, annotate_faces,
             cropped.save(chip_path)
 
         if annotate_landmarks:
-            draw_landmark_annotation(img, shape, landmark_color,
-                                     int(w * 0.0025))
+            draw_landmark_annotation(img, shape, landmark_color, 1)
+            #  int(w * 0.0025))
 
         if annotate_faces:
             draw_face_annotation(img, face, face_color, int(w * 0.005))
