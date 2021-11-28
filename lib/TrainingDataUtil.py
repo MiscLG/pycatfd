@@ -8,11 +8,11 @@ class TrainingDataUtil:
     def __init__(self):
         pass
 
-    training_data_dir = 'mini_training/dataset'
+    training_data_dir = '../../../../data/'
     training_data_archive = 'training_data.tar.gz'
-    training_data_xml = '../training.xml'
+    training_data_xml = 'training.xml'
 
-    @staticmethod
+    @ staticmethod
     def archive_training_data():
         if os.path.isfile(TrainingDataUtil.training_data_archive):
             if not TrainingDataUtil.__confirm_if_archive():
@@ -25,14 +25,14 @@ class TrainingDataUtil:
         except Exception as e:
             print(e)
 
-    @staticmethod
+    @ staticmethod
     def extract_training_data():
         if not os.path.isdir(TrainingDataUtil.training_data_dir):
             tar = tarfile.open(TrainingDataUtil.training_data_archive, 'r:gz')
             tar.extractall()
             tar.close()
 
-    @staticmethod
+    @ staticmethod
     def download_training_data(url):
         if not TrainingDataUtil.__confirm_if_archive():
             return
@@ -43,7 +43,7 @@ class TrainingDataUtil:
                 if chunk:
                     f.write(chunk)
 
-    @staticmethod
+    @ staticmethod
     def __confirm(question, default="yes"):
         valid = {"yes": True, "y": True, "ye": True,
                  "no": False, "n": False}
@@ -68,7 +68,7 @@ class TrainingDataUtil:
                 sys.stdout.write("Please respond with 'yes' or 'no' "
                                  "(or 'y' or 'n').\n")
 
-    @staticmethod
+    @ staticmethod
     def __confirm_if_archive():
         message = '{0} already exists, overwrite?'.format(
             TrainingDataUtil.training_data_archive
