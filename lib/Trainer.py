@@ -17,6 +17,10 @@ class Trainer:
         self.xml = '{}/{}'.format(folder, TrainingDataUtil.training_data_xml)
         self.window_size = window_size
 
+        # added
+        self.validation_xml = '{}/{}'.format(folder,
+                                             TrainingDataUtil.validation_data_xml)
+
     def train_object_detector(self):
         self.__print_training_message('object detector')
         opt = dlib.simple_object_detector_training_options()
@@ -27,15 +31,22 @@ class Trainer:
         opt.detection_window_size = self.window_size ** 2
         dlib.train_simple_object_detector(self.xml, DETECTOR_SVM, opt)
 
+    def test_object_detector(self):
+        print(dlib.test_simple_object_detector(
+            self.validation_xml, DETECTOR_SVM))
+
     def train_shape_predictor(self):
         self.__print_training_message('shape predictor')
         opt = dlib.shape_predictor_training_options()
-        opt.oversampling_amount = 300
+        opt.oversampling_amount = 300  # higher is better but increases training time
         opt.nu = 0.05
         opt.tree_depth = 2
         opt.num_threads = self.cpu_cores
         opt.be_verbose = True
         dlib.train_shape_predictor(self.xml, PREDICTOR_DAT, opt)
+
+    def test_shape_predictor(self):
+        print(dlib.test_shape_predictor(self.validation_xml, PREDICTOR_DAT))
 
     def view_object_detector(self):
         detector = dlib.simple_object_detector(DETECTOR_SVM)
@@ -44,4 +55,5 @@ class Trainer:
         dlib.hit_enter_to_continue()
 
     def __print_training_message(self, trainer):
-        print(('Training {0} with {1} CPU cores.'.format(trainer, self.cpu_cores)))
+        print(('Training {0} with {1} CPU cores.'.format(
+            trainer, self.cpu_cores)))

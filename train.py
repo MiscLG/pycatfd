@@ -38,7 +38,8 @@ def main():
                         help='''
                         number of CPU cores to train with
                         ''',
-                        default=multiprocessing.cpu_count(),
+                        default=min(multiprocessing.cpu_count(),
+                                    multiprocessing.cpu_count()-4),
                         metavar='<int>')
 
     parser.add_argument('-v', '--view-detector',
@@ -98,7 +99,7 @@ def main():
             "RIGHT_OF_LEFT_EAR",
             "LEFT_OF_RIGHT_EAR",
             "TIP_OF_RIGHT_EAR",
-            "RIGHT_OF_RIGTH_EAR",
+            "RIGHT_OF_RIGHT_EAR",
         )
         cmd = 'imglab {}/{} --parts "{}"'.format(
             TrainingDataUtil.training_data_dir,
@@ -115,12 +116,14 @@ def train_predictor(cpu_cores):
     # TrainingDataUtil.extract_training_data()
     t = Trainer(TrainingDataUtil.training_data_dir, cpu_cores)
     t.train_shape_predictor()
+    t.test_shape_predictor()
 
 
 def train_detector(cpu_cores, window_size):
     # TrainingDataUtil.extract_training_data()
     t = Trainer(TrainingDataUtil.training_data_dir, cpu_cores, window_size)
     t.train_object_detector()
+    t.test_object_detector()
 
 
 def view_object_detector_svm():

@@ -8,6 +8,7 @@ from PIL import Image
 from lib.CatFaceLandmark import *
 from lib.Detector import Detector
 from skimage import io
+import dlib
 
 
 def main():
@@ -63,23 +64,16 @@ def main():
                         nargs=3)
 
     args = vars(parser.parse_args())
+    use_dlib = True
 
     if not args['input_image'] and not args['input_folder']:
         parser.error("must specify either -i or -f")
 
     if args['input_image']:
-        detect(args['input_image'],
-               args['output_path'],
-               args['json'],
-               args['annotate_faces'],
-               args['annotate_landmarks'],
-               args['face_color'],
-               args['landmark_color'],
-               args['save_chip'])
-
-    if args['input_folder']:
-        for f in glob.glob(os.path.join(args['input_folder'], '*.jp*g')):
-            detect(f,
+        if use_dlib:
+            dlib_detect(args['input_image'])
+        else:
+            detect(args['input_image'],
                    args['output_path'],
                    args['json'],
                    args['annotate_faces'],
@@ -87,6 +81,50 @@ def main():
                    args['face_color'],
                    args['landmark_color'],
                    args['save_chip'])
+
+    if args['input_folder']:
+        for f in glob.glob(os.path.join(args['input_folder'], '*.jp*g')):
+            if use_dlib:
+                dlib_detect(f)
+            else:
+                detect(f,
+                       args['output_path'],
+                       args['json'],
+                       args['annotate_faces'],
+                       args['annotate_landmarks'],
+                       args['face_color'],
+                       args['landmark_color'],
+                       args['save_chip'])
+
+
+def dlib_detect(filename):
+    print("Showing detections and predictions on the images in the faces folder...")
+    win = dlib.image_window()
+    print("Processing file: {}".format(filename))
+    img = dlib.load_rgb_image(filename)
+
+    win.clear_overlay()
+    win.set_image(img)
+
+    # Ask the detector to find the bounding boxes of each face. The 1 in the
+    # second argument indicates that we should upsample the image 1 time. This
+    # will make everything bigger and allow us to detect more faces.
+    d = Detector(filename)
+    d.detect()
+    dets = d.result.face_count
+    print("Number of faces detected: {}".format(dets))
+    for k, face in enumerate(d.result.faces):
+        print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
+            k, face.left(), face.top(), face.right(), face.bottom()))
+        # Get the landmarks/parts for the face in box d.
+        shape = d.predictor(img, face)
+        print("Part 0: {}, Part 1: {} ...".format(shape.part(0),
+                                                  shape.part(1)))
+        # Draw the face landmarks on the screen.
+        win.add_overlay(shape)
+
+    win.add_overlay(d.result.faces)
+    dlib.hit_enter_to_continue()
 
 
 def detect(input_image, output_path, use_json, annotate_faces,

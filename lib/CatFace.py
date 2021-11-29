@@ -2,7 +2,7 @@ import xml.etree.ElementTree as et
 
 
 class CatFace:
-    def __init__(self, filename, feat_str):
+    def __init__(self, filename, feat_str, bb_str):
         features = feat_str.split()
         num_features = features[0]
         self.file = filename
@@ -17,14 +17,14 @@ class CatFace:
             "TIP_OF_RIGHT_EAR": (features[15], features[16]),
             "RIGHT_OF_RIGTH_EAR": (features[17], features[18]),
         }
-        x_values = [int(x) for x in features[1::2]]
-        y_values = [int(x) for x in features[2::2]]
-        left = min(x_values)
-        right = max(x_values)
-        top = min(y_values)
-        bottom = max(y_values)
-        self.box = {'top': top, 'left': left,
-                    "width": right - left, "height": bottom-top}
+        bb = bb_str.split()
+        self.box = {
+            'left': bb[0],
+            'top': bb[1],
+            # TODO: check that width and height are not supposed to just be left and bottom
+            'width': int(bb[2])-int(bb[0]),  # left-right
+            'height': int(bb[3])-int(bb[1]),  # bottom-top
+        }
 
     def GenerateXML(self):
         image = et.Element("image")
@@ -32,12 +32,17 @@ class CatFace:
         box = et.SubElement(image, "box")
         for key, val in self.box.items():
             box.set(key, "%s" % val)
-        for key, val in self.features.items():
+
+        landmarks = ["LEFT_EYE", "RIGHT_EYE", "MOUTH", "LEFT_OF_LEFT_EAR", "TIP_OF_LEFT_EAR",
+                     "RIGHT_OF_LEFT_EAR", "LEFT_OF_RIGHT_EAR", "TIP_OF_RIGHT_EAR", "RIGHT_OF_RIGTH_EAR"]
+
+        for landmark in landmarks:
+            point = self.features[landmark]
             part = et.SubElement(box, "part")
-            part.set('name', key)
-            part.set('x', val[0])
-            part.set('y', val[1])
-        # et.dump(image)
+            part.set('name', landmark)
+            part.set('x', point[0])
+            part.set('y', point[1])
+
         return image
 
 
