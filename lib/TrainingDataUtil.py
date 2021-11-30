@@ -10,10 +10,19 @@ class TrainingDataUtil:
 
     training_data_dir = '../../../../data/'
     training_data_archive = 'training_data.tar.gz'
+
+    # dataset
     training_data_xml = 'train.xml'
     validation_data_xml = 'validation.xml'
-    testing_data_xml = 'train.xml'
+    testing_data_xml = 'test.xml'
 
+    # resized
+    training_data_archive = 'training_data.tar.gz'
+    training_data_xml = 'train_resized.xml'
+    validation_data_xml = 'validation_resized.xml'
+    testing_data_xml = 'test_resized.xml'
+
+    # original
     # training_data_dir = 'training_data'
     # training_data_archive = 'training_data.tar.gz'
     # training_data_xml = 'training.xml'

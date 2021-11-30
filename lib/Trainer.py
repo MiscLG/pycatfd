@@ -29,6 +29,7 @@ class Trainer:
         opt.num_threads = self.cpu_cores
         opt.be_verbose = True
         opt.detection_window_size = self.window_size ** 2
+        opt.upsample_limit = 1
         dlib.train_simple_object_detector(self.xml, DETECTOR_SVM, opt)
 
     def test_object_detector(self):
