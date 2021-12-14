@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as et
+import numpy as np
+from dlib import rectangle
 
 
 class CatFace:
@@ -18,13 +20,22 @@ class CatFace:
             "RIGHT_OF_RIGTH_EAR": (features[17], features[18]),
         }
         bb = bb_str.split()
+        features = np.array(features).astype(int)[1:].reshape((-1, 2))
+        bb = np.array([np.min(features, axis=0),
+                      np.max(features, axis=0)]).flatten()
+        # print(bb.flatten())
+        width = int(bb[2]) - int(bb[0])
+        height = int(bb[3]) - int(bb[1])
+        sqr_dim = max(width, height)
         self.box = {
             'left': bb[0],
             'top': bb[1],
             # TODO: check that width and height are not supposed to just be left and bottom
-            'width': int(bb[2])-int(bb[0]),  # left-right
-            'height': int(bb[3])-int(bb[1]),  # bottom-top
+            'width': sqr_dim,  # left-right
+            'height': sqr_dim,  # bottom-top
         }
+        self.rect = [rectangle(left=bb[0], top=bb[1],
+                               right=bb[0]+sqr_dim, bottom=bb[1]+sqr_dim)]
 
     def GenerateXML(self):
         image = et.Element("image")

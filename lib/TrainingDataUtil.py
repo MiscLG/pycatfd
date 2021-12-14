@@ -12,20 +12,20 @@ class TrainingDataUtil:
     training_data_archive = 'training_data.tar.gz'
 
     # dataset
-    training_data_xml = 'train.xml'
-    validation_data_xml = 'validation.xml'
-    testing_data_xml = 'test.xml'
+    # training_data_xml = 'train_debug.xml'
+    # validation_data_xml = 'validation_resized.xml'
+    # testing_data_xml = 'test.xml'
 
-    # resized
-    training_data_archive = 'training_data.tar.gz'
+    # # resized
     training_data_xml = 'train_resized.xml'
     validation_data_xml = 'validation_resized.xml'
     testing_data_xml = 'test_resized.xml'
 
-    # original
+    # # original
     # training_data_dir = 'training_data'
     # training_data_archive = 'training_data.tar.gz'
     # training_data_xml = 'training.xml'
+    # validation_data_xml = '../../../../data/validation_resized.xml'
 
     @ staticmethod
     def archive_training_data():

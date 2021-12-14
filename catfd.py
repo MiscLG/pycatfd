@@ -64,7 +64,7 @@ def main():
                         nargs=3)
 
     args = vars(parser.parse_args())
-    use_dlib = True
+    use_dlib = False
 
     if not args['input_image'] and not args['input_folder']:
         parser.error("must specify either -i or -f")
@@ -130,7 +130,6 @@ def dlib_detect(filename):
 def detect(input_image, output_path, use_json, annotate_faces,
            annotate_landmarks, face_color, landmark_color, save_chip):
     img = io.imread(input_image)
-
     d = Detector(input_image)
     d.detect()
 
@@ -178,7 +177,8 @@ def detect(input_image, output_path, use_json, annotate_faces,
                                        '_annotated',
                                        'jpg')
 
-            cv2.imwrite(filename, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+            cv2.imshow(filename, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+            cv2.waitKey()
 
     if use_json:
         print(json)
@@ -241,12 +241,13 @@ def draw_landmark_annotation(img, shape, color, width):
         [CatFaceLandmark.LEFT_EYE, CatFaceLandmark.RIGHT_EYE],
         [CatFaceLandmark.RIGHT_EYE, CatFaceLandmark.MOUTH],
         [CatFaceLandmark.MOUTH, CatFaceLandmark.LEFT_EYE],
+        [CatFaceLandmark.MOUTH, CatFaceLandmark.LEFT_OF_LEFT_EAR],
         [CatFaceLandmark.LEFT_OF_LEFT_EAR, CatFaceLandmark.TIP_OF_LEFT_EAR],
         [CatFaceLandmark.TIP_OF_LEFT_EAR, CatFaceLandmark.RIGHT_OF_LEFT_EAR],
         [CatFaceLandmark.RIGHT_OF_LEFT_EAR, CatFaceLandmark.LEFT_OF_RIGHT_EAR],
         [CatFaceLandmark.LEFT_OF_RIGHT_EAR, CatFaceLandmark.TIP_OF_RIGHT_EAR],
         [CatFaceLandmark.TIP_OF_RIGHT_EAR, CatFaceLandmark.RIGHT_OF_RIGHT_EAR],
-        [CatFaceLandmark.RIGHT_OF_RIGHT_EAR, CatFaceLandmark.LEFT_OF_LEFT_EAR],
+        [CatFaceLandmark.RIGHT_OF_RIGHT_EAR, CatFaceLandmark.MOUTH],
     ]
 
     for i in lines:
@@ -256,6 +257,8 @@ def draw_landmark_annotation(img, shape, color, width):
 def draw_line(img, shape1, shape2, color, width):
     pt1 = (shape1.x, shape1.y)
     pt2 = (shape2.x, shape2.y)
+    cv2.circle(img, pt1, radius=5, color=(0, 0, 255), thickness=-1)
+    cv2.circle(img, pt2, radius=5, color=(0, 0, 255), thickness=-1)
     cv2.line(img, pt1, pt2, color, width, cv2.LINE_AA)
 
 
