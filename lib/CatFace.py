@@ -4,6 +4,11 @@ from dlib import rectangle
 
 
 class CatFace:
+    """ 
+    creates an object that holds the landmark and bounding box data for a cat face in 
+    the image that filename points to
+    """
+
     def __init__(self, filename, feat_str, bb_str):
         features = feat_str.split()
         num_features = features[0]
@@ -38,6 +43,7 @@ class CatFace:
                                right=bb[0]+sqr_dim, bottom=bb[1]+sqr_dim)]
 
     def GenerateXML(self):
+        """Creates the XML annotation fo this face in the format for dlib"""
         image = et.Element("image")
         image.set('file', self.file)
         box = et.SubElement(image, "box")

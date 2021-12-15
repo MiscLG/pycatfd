@@ -98,6 +98,7 @@ def main():
 
 
 def dlib_detect(filename):
+    """Applies the detector on a given file and uses dlib to show the results"""
     print("Showing detections and predictions on the images in the faces folder...")
     win = dlib.image_window()
     print("Processing file: {}".format(filename))
@@ -129,6 +130,9 @@ def dlib_detect(filename):
 
 def detect(input_image, output_path, use_json, annotate_faces,
            annotate_landmarks, face_color, landmark_color, save_chip):
+    """
+        Applies the detector on a given file and uses opencv to show the results
+    """
     img = io.imread(input_image)
     d = Detector(input_image)
     d.detect()
@@ -185,6 +189,7 @@ def detect(input_image, output_path, use_json, annotate_faces,
 
 
 def get_output_file(output_path, input_image, extra, ext):
+    """ Gets output filepath from input path """
     if not os.path.isdir(output_path):
         os.makedirs(output_path)
 
@@ -193,6 +198,7 @@ def get_output_file(output_path, input_image, extra, ext):
 
 
 def print_face_info(i, face, shape):
+    """ Prints the landmark and bounding box coordinates"""
     print(('Face #{}: ({}, {}), ({}, {})'.format(
         i,
         face.top(),
@@ -229,6 +235,7 @@ def get_face_json(face, shape):
 
 
 def draw_face_annotation(img, face, color, width):
+    """draws bounding box of face on given image"""
     cv2.rectangle(img,
                   (face.left(), face.top()),
                   (face.right(), face.bottom()),
@@ -237,6 +244,7 @@ def draw_face_annotation(img, face, color, width):
 
 
 def draw_landmark_annotation(img, shape, color, width):
+    """ Draws face landmarks of given image"""
     lines = [
         [CatFaceLandmark.LEFT_EYE, CatFaceLandmark.RIGHT_EYE],
         [CatFaceLandmark.RIGHT_EYE, CatFaceLandmark.MOUTH],
@@ -255,6 +263,7 @@ def draw_landmark_annotation(img, shape, color, width):
 
 
 def draw_line(img, shape1, shape2, color, width):
+    """draws line connecting landmarks"""
     pt1 = (shape1.x, shape1.y)
     pt2 = (shape2.x, shape2.y)
     cv2.circle(img, pt1, radius=5, color=(0, 0, 255), thickness=-1)
